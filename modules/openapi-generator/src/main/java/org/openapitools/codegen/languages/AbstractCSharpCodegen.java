@@ -529,7 +529,6 @@ public abstract class AbstractCSharpCodegen extends DefaultCodegen implements Co
 
         // TODO: move the logic of these three methods into patchProperty so all CodegenProperty instances get the same treatment
         postProcessEnumRefs(processed);
-        updateValueTypeProperty(processed);
         updateNullableTypeProperty(processed);
 
         for (Map.Entry<String, ModelsMap> entry : objs.entrySet()) {
@@ -806,22 +805,6 @@ public abstract class AbstractCSharpCodegen extends DefaultCodegen implements Co
                 var.isString = true;
                 var.isInteger = false;
                 var.isLong = false;
-            }
-        }
-    }
-
-    /**
-     * Update property if it is a C# value type
-     *
-     * @param models list of all models
-     */
-    protected void updateValueTypeProperty(Map<String, ModelsMap> models) {
-        for (String openAPIName : models.keySet()) {
-            CodegenModel model = ModelUtils.getModelByName(openAPIName, models);
-            if (model != null) {
-                for (CodegenProperty var : model.vars) {
-                    var.vendorExtensions.put("x-is-value-type", isValueType(var));
-                }
             }
         }
     }
