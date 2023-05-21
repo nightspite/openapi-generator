@@ -3,12 +3,6 @@ image: Visual Studio 2022
 hosts:
   petstore.swagger.io: 127.0.0.1
 install:
-  - cmd: SET PATH=C:\maven\apache-maven-3.8.3\bin;C:\gradle\gradle-7.6\bin;%JAVA_HOME%\bin;%PATH%
-  - cmd: SET MAVEN_OPTS=-Xmx4g
-  - cmd: SET JAVA_OPTS=-Xmx4g
-  - cmd: SET M2_HOME=C:\maven\apache-maven-3.8.3
-  - cmd: java -version
-  - cmd: dir/w
   - cmd: docker pull swaggerapi/petstore
   - cmd: docker run -d -e SWAGGER_HOST=http://petstore.swagger.io -e SWAGGER_BASE_PATH=/v2 -p 80:8080 swaggerapi/petstore 
   - ps: Start-Sleep -s 120
@@ -52,6 +46,8 @@ build_script:
   #- nuget restore samples\client\petstore\csharp\OpenAPIClientNetStandard\Org.OpenAPITools.sln
   #- msbuild samples\client\petstore\csharp\OpenAPIClientNetStandard\Org.OpenAPITools.sln /logger:"C:\Program Files\AppVeyor\BuildAgent\Appveyor.MSBuildLogger.dll"
 test_script:
+  # test c# API client
+  - dotnet test samples\client\petstore\csharp-netcore\OpenAPIClient\src\Org.OpenAPITools.Test\Org.OpenAPITools.Test.csproj
   # test c# API client (multiple frameworks)
   - dotnet test samples\client\petstore\csharp-netcore\OpenAPIClientCoreAndNet47\src\Org.OpenAPITools.Test\Org.OpenAPITools.Test.csproj
   # test c# API client (httpclient)
@@ -60,7 +56,6 @@ test_script:
   - dotnet test samples\client\petstore\csharp-netcore\OpenAPIClient-generichost-netstandard2.0\src\Org.OpenAPITools.Test\Org.OpenAPITools.Test.csproj
   # test c# API client (netcore)
   - dotnet test samples\client\petstore\csharp-netcore\OpenAPIClientCore\src\Org.OpenAPITools.Test\Org.OpenAPITools.Test.csproj
-  #- dotnet test samples\client\petstore\csharp-netcore\OpenAPIClient\src\Org.OpenAPITools.Test\Org.OpenAPITools.Test.csproj
   # test C# API client (.net framework 4.7)
   - dotnet test samples\client\petstore\csharp-netcore\OpenAPIClient-net47\src\Org.OpenAPITools.Test\Org.OpenAPITools.Test.csproj
   # test C# API client (.net framework 4.8)
@@ -73,12 +68,6 @@ test_script:
   #- nunit3-console samples\client\petstore\csharp\OpenAPIClient\src\Org.OpenAPITools.Test\bin\Debug\Org.OpenAPITools.Test.dll --result=myresults.xml;format=AppVeyor
   ## test c# API client (with PropertyChanged)
   #- nunit3-console samples\client\petstore\csharp\OpenAPIClientWithPropertyChanged\src\Org.OpenAPITools.Test\bin\Debug\Org.OpenAPITools.Test.dll --result=myresults.xml;format=AppVeyor
-
-### TODO: Execute all generators via powershell or other
-  # generate all petstore clients
-  # - .\bin\windows\run-all-petstore.cmd
-  # generate all petstore clients (openapi3)
-  # - .\bin\openapi3\windows\run-all-petstore.cmd
 
   # test ps petstore
   - ps: |
